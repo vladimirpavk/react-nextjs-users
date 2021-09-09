@@ -1,6 +1,7 @@
 import {useState} from 'react';
 
 import Button from '../UI/Button/Button';
+import Card from '../UI/Card/Card';
 
 import styles from './AddUser.module.css';
 
@@ -13,63 +14,54 @@ const AddUser = (props)=>{
         }
     );
 
+    const [error, setError] = useState(false);
+
     const formSubmitted = (eventData)=>{
-        eventData.preventDefault();        
-    }
+        eventData.preventDefault();      
+        //form data validation
+        if(formData.username.trim().length === 0 && formData.age < 1){
+            setError(true);
+            return;
+        }
 
-    const usernameChanged = (eventData)=>{
-        //console.log(eventData.target.value);
-        setFormData(
-            oldValues=>{
-                return{
-                    ...oldValues,
-                    'username': eventData.target.value
-                }
-            }
-        )
-    }
-
-    const ageChanged = (eventData, anyValue)=>{
-        console.log(eventData.target.value);
-        setFormData(
-            oldValues=>{
-                return{
-                    ...oldValues,
-                    'age': eventData.target.value
-                }
-            }
-        )
-        console.log(anyValue);
+        props.userAdded(formData);
+        setFormData( {
+            username :'',
+            age: ''
+        });
+        setError(false);
     }
 
     const formDataChanged = (eventData, prop)=>{
         setFormData(
-            oldValues=>{
-                return{
-                    ...oldValues,
-                    prop:eventData.target.value
-                }
+            oldValue=>{
+                const newValue = { ...oldValue };
+                newValue[prop] = eventData.target.value;
+                return newValue;
             }
         )
     }
 
     return(
-        <form onSubmit={formSubmitted} className={styles.input}>
-            <label htmlFor="username">Username</label>
-            <input
-                id="username"
-                type="text"
-                value={formData.username}
-                onChange={usernameChanged}/>
-            <label htmlFor="age">Age</label>
-            <input
-                id="age"
-                type="number"
-                value={formData.age}
-                onChange={eventData=>formDataChanged(eventData, 'age')}
-                />
-            <Button type="submit">Add User</Button>
-        </form>
+        <Card>
+            <form onSubmit={formSubmitted} className={styles.input}>
+                <p className={error ? styles.errorLabelShown : styles.errorLabel}>Invalid input username is not entered or age is less than 1</p>
+                <label htmlFor="username">Username</label>
+                <input
+                    id="username"
+                    type="text"
+                    value={formData.username}
+                    onChange={eventData=>formDataChanged(eventData, 'username')}/>
+                <label htmlFor="age">Age</label>
+                <input
+                    id="age"
+                    type="number"
+                    value={formData.age}
+                    onChange={eventData=>formDataChanged(eventData, 'age')}
+                    />
+                <Button type="submit">Add User</Button>
+            </form>
+        </Card>        
     )
 }
 

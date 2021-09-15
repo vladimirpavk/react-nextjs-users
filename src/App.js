@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import AddUser from './components/AddUser/AddUser';
 import UserList from './components/UserList/UserList'
@@ -24,12 +24,18 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(()=>{
+    if(localStorage.getItem('isLoggedIn')==='true') setIsLoggedIn(true);
+  }, [])
+  
   const loginHandler = (username, password)=>{
-    console.log(username, password);
+    //console.log(username, password);
+    localStorage.setItem('isLoggedIn', 'true')
     setIsLoggedIn(true);
   }
 
   const logoutHandler = ()=>{
+    localStorage.setItem('isLoggedIn', 'false');
     setIsLoggedIn(false);
   }
 

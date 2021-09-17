@@ -16,3 +16,10 @@
   .button:focus {
     outline: none;
   }
+
+
+  .button:disabled {
+    border: 1px solid grey;
+    background: grey;
+    color: white;
+  }
